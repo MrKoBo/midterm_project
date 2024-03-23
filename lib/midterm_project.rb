@@ -12,6 +12,8 @@ class Card
   end
 end
 class Deck
+  attr_accessor :active_deck
+
   def initialize
     @suits = ["Diamonds", "Hearts", "Clubs", "Spades"]
     @values = {
@@ -41,12 +43,13 @@ class Deck
 
   def shuffle_deck
     @active_deck.shuffle!
-    @active_deck.each do |item|
-      item.display
-    end
+  end
 
+  def deal
+    top_card = @active_deck.shift
   end
 end
+
 class Hnad
 end
 class Player
