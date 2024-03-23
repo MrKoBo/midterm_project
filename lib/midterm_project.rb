@@ -2,35 +2,30 @@
 
 class Card
   attr_accessor :suit, :value
+
   def initialize(value, suit)
     @suit = suit
     @value = value
   end
 
-  def display()
-    puts "#{value} of #{suit}"
+  def display
+    value_str = case value
+      when [1,14] then "Ace"
+      when 11 then "Jack"
+      when 12 then "Queen"
+      when 13 then "King"
+      else value.to_s
+      end
+    puts "#{value_str} of #{suit}"
   end
 end
+
 class Deck
   attr_accessor :active_deck
 
   def initialize
     @suits = ["Diamonds", "Hearts", "Clubs", "Spades"]
-    @values = {
-      "Ace" => [1, 14],
-      "Two" => 2,
-      "Three" => 3,
-      "Four" => 4,
-      "Five" => 5,
-      "Six" => 6,
-      "Seven" => 7,
-      "Eight" => 8,
-      "Nine" => 9,
-      "Ten" => 10,
-      "Jack" => 11,
-      "Queen" => 12,
-      "King" => 13
-    }
+    @values = [1,2,3,4,5,6,7,8,9,10,11,12,13]
     @start_deck = []
     @values.each do |key, value|
       @suits.each do |item|
@@ -48,11 +43,40 @@ class Deck
   def deal
     top_card = @active_deck.shift
   end
+  def give_cards
+    new_hand = []
+    5.times do |item|
+      item = deal
+      new_hand << item
+    end
+    Hand.new(new_hand)
+  end
 end
+class Hand
+  attr_accessor :active_hand
+  def initialize(active_hand)
+    @active_hand = active_hand
 
-class Hnad
-end
-class Player
-end
-class Game
+    @hierarchy = {
+      "Straight Flush" => 9,
+      "Four of a Kind" => 8,
+      "Full House" => 7,
+      "Flush" => 6,
+      "Straight" => 5,
+      "Three of a Kind" => 4,
+      "Two Pairs" => 3,
+      "Pair" => 2,
+      "High Card" => 1
+    }
+
+  end
+
+  def quality
+    current_values = []
+    @active_hand.each do |card|
+      value = card.value
+      current_values << value
+    end
+    @sorted_values = current_values.sort
+  end
 end
