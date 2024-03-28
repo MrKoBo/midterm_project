@@ -10,7 +10,7 @@ class Card
 
   def display
     value_str = case value
-      when [1,14] then "Ace"
+      when 1 then "Ace"
       when 11 then "Jack"
       when 12 then "Queen"
       when 13 then "King"
@@ -78,5 +78,59 @@ class Hand
       current_values << value
     end
     @sorted_values = current_values.sort
+    @sorted_values
+  end
+
+  def strength
+    return "Four of a Kind" if four_of_a_kind?
+    return "Full House" if full_house?
+    return "Straight" if straight?
+    return "Three of a Kind" if three_of_a_kind?
+    return "Pair" if pair?
+    "High Card"
+  end
+
+  private
+  def full_house?
+    counts = Hash.new(0)
+    @sorted_values.each do |item|
+      counts[item] += 1
+      return true if counts[item] == 3 && counts.length == 2
+    end
+    false
+
+  end
+  def straight?
+    (0...4).each do |i|
+      return false unless @sorted_values[i] + 1 == @sorted_values[i + 1]
+    end
+    true
+  end
+
+  def pair?
+    (0...5).each do |i|
+      ((i + 1)...5).each do |j|
+        return true if @sorted_values[i] == @sorted_values[j]
+      end
+    end
+    false
+  end
+
+  def three_of_a_kind?
+    counts = Hash.new(0)
+    @sorted_values.each do |item|
+      counts[item] += 1
+      return true if counts[item] == 3
+    end
+    false
+  end
+
+  def four_of_a_kind?
+    counts = Hash.new(0)
+    @sorted_values.each do |item|
+      counts[item] += 1
+      return true if counts[item] == 4
+    end
+    false
   end
 end

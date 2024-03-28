@@ -2,11 +2,11 @@ require 'spec_helper'
 require 'midterm_project'
 
 RSpec.describe Card do
-  let(:card) { Card.new("Ten", "Spades") }
+  let(:card) { Card.new(1, "Spades") }
 
   describe "#display" do
     it "tells the user which card it is" do
-      expect { card.display }.to output("Ten of Spades\n").to_stdout
+      expect { card.display }.to output("Ace of Spades\n").to_stdout
     end
   end
 end
@@ -43,10 +43,26 @@ RSpec.describe Deck do
 end
 
 RSpec.describe Hand do
+  let(:cards) do
+    [
+      Card.new(3, "Hearts"),
+      Card.new(2, "Clubs"),
+      Card.new(6, "Spades"),
+      Card.new(5, "Diamonds"),
+      Card.new(4, "Hearts")
+    ]
+  end
+  let(:hand) { Hand.new(cards) }
   describe "#quality" do
-    it "orders the cards based on value" do
-      my_hand = Hand.new([Card.new(4, "Space"), Card.new(6, "Space"), Card.new(3, "Space"), Card.new(11, "Space"), Card.new(9, "Space")])
-      expect(my_hand.quality).to eq([3,4,6,9,11])
+    it "orders the cards in ascending order based on value" do
+      expected_order = [2, 3, 4, 5, 6]
+      sorted_values = hand.quality
+      expect(sorted_values).to eq(expected_order)
+    end
+  end
+  describe "#strength" do
+    it "checks to see if there is a straight" do
+      expect(hand.strength).to  eq(true)
     end
   end
 end
