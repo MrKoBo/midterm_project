@@ -1,5 +1,6 @@
-require 'spec_helper'
-require 'midterm_project'
+# /new_midterm_project/spec
+require 'new_midterm_project'
+
 
 RSpec.describe Card do
   let(:card) { Card.new(1, "Spades") }
