@@ -45,7 +45,7 @@ end
 
 RSpec.describe Hand do
   describe "#strength" do
-    it "evaluates a Straight correctly" do
+    it "evaluates a Royal Flush correctly" do
       cards = [
         Card.new(10, "Hearts"),
         Card.new(11, "Hearts"),
@@ -54,8 +54,106 @@ RSpec.describe Hand do
         Card.new(1, "Hearts")
       ]
       hand = Hand.new(cards)
+      expect(hand.strength).to eq("Royal Flush")
+    end
+    it "evaluates a Straight Flush correctly" do
+      cards = [
+        Card.new(6, "Hearts"),
+        Card.new(4, "Hearts"),
+        Card.new(5, "Hearts"),
+        Card.new(7, "Hearts"),
+        Card.new(3, "Hearts")
+      ]
+      hand = Hand.new(cards)
+      expect(hand.strength).to eq("Straight Flush")
+    end
+    it "evaluates a Four of a Kind correctly" do
+      cards = [
+        Card.new(2, "Hearts"),
+        Card.new(2, "Diamonds"),
+        Card.new(6, "Hearts"),
+        Card.new(2, "Clubs"),
+        Card.new(2, "Spades")
+      ]
+      hand = Hand.new(cards)
+      expect(hand.strength).to eq("Four of a Kind")
+    end
+    it "evaluates a Full House correctly" do
+      cards = [
+        Card.new(2, "Hearts"),
+        Card.new(2, "Diamonds"),
+        Card.new(2, "Spades"),
+        Card.new(12, "Clubs"),
+        Card.new(12, "Hearts")
+      ]
+      hand = Hand.new(cards)
+      expect(hand.strength).to eq("Full House")
+    end
+    it "evaluates a Flush correctly" do
+      cards = [
+        Card.new(4, "Hearts"),
+        Card.new(3, "Hearts"),
+        Card.new(9, "Hearts"),
+        Card.new(2, "Hearts"),
+        Card.new(10, "Hearts")
+      ]
+      hand = Hand.new(cards)
+      expect(hand.strength).to eq("Flush")
+    end
+    it "evaluates a Straight correctly" do
+      cards = [
+        Card.new(11, "Clubs"),
+        Card.new(12, "Hearts"),
+        Card.new(13, "Spades"),
+        Card.new(10, "Hearts"),
+        Card.new(1, "Diamondss")
+      ]
+      hand = Hand.new(cards)
       expect(hand.strength).to eq("Straight")
     end
-
+    it "evaluates a Three of a Kind correctly" do
+      cards = [
+        Card.new(2, "Hearts"),
+        Card.new(7, "Diamonds"),
+        Card.new(6, "Hearts"),
+        Card.new(2, "Clubs"),
+        Card.new(2, "Spades")
+      ]
+      hand = Hand.new(cards)
+      expect(hand.strength).to eq("Three of a Kind")
+    end
+    it "evaluates a Two Pairs correctly" do
+      cards = [
+        Card.new(2, "Hearts"),
+        Card.new(2, "Diamonds"),
+        Card.new(6, "Hearts"),
+        Card.new(6, "Clubs"),
+        Card.new(13, "Spades")
+      ]
+      hand = Hand.new(cards)
+      expect(hand.strength).to eq("Two Pairs")
+    end
+    it "evaluates a Pair correctly" do
+      cards = [
+        Card.new(2, "Hearts"),
+        Card.new(2, "Diamonds"),
+        Card.new(6, "Hearts"),
+        Card.new(10, "Clubs"),
+        Card.new(11, "Spades")
+      ]
+      hand = Hand.new(cards)
+      expect(hand.strength).to eq("Pair")
+    end
+    it "evaluates a High Card correctly" do
+      cards = [
+        Card.new(2, "Hearts"),
+        Card.new(9, "Diamonds"),
+        Card.new(6, "Hearts"),
+        Card.new(10, "Clubs"),
+        Card.new(4, "Spades")
+      ]
+      hand = Hand.new(cards)
+      expect(hand.strength).to eq("High Card")
+    end
   end
 end

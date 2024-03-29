@@ -59,6 +59,7 @@ class Hand
   def initialize(active_hand)
     @active_hand = active_hand
     @hierarchy = {
+      "Royal Flush" => 10,
       "Straight Flush" => 9,
       "Four of a Kind" => 8,
       "Full House" => 7,
