@@ -52,11 +52,12 @@ class Deck
     Hand.new(new_hand)
   end
 end
+
 class Hand
-  attr_accessor :active_hand
+  attr_accessor :active_hand, :sorted_values
+
   def initialize(active_hand)
     @active_hand = active_hand
-
     @hierarchy = {
       "Straight Flush" => 9,
       "Four of a Kind" => 8,
@@ -68,69 +69,36 @@ class Hand
       "Pair" => 2,
       "High Card" => 1
     }
-
-  end
-
-  def quality
-    current_values = []
+    @current_values = []
     @active_hand.each do |card|
-      value = card.value
-      current_values << value
+      @current_values << card.value
     end
-    @sorted_values = current_values.sort
-    @sorted_values
+    @sorted_values = @current_values.sort
   end
 
   def strength
-    return "Four of a Kind" if four_of_a_kind?
-    return "Full House" if full_house?
-    return "Straight" if straight?
-    return "Three of a Kind" if three_of_a_kind?
-    return "Pair" if pair?
+    return "Straight" if straight
     "High Card"
   end
 
   private
-  def full_house?
-    counts = Hash.new(0)
-    @sorted_values.each do |item|
-      counts[item] += 1
-      return true if counts[item] == 3 && counts.length == 2
-    end
-    false
 
-  end
-  def straight?
+  def straight
+    return false if @sorted_values.nil? || @sorted_values.empty?
+    # Check for a regular straight (non-wrap-around)
+    return true if @sorted_values == [1, 10, 11, 12, 13]
     (0...4).each do |i|
       return false unless @sorted_values[i] + 1 == @sorted_values[i + 1]
     end
-    true
+
+    return true
   end
 
-  def pair?
-    (0...5).each do |i|
-      ((i + 1)...5).each do |j|
-        return true if @sorted_values[i] == @sorted_values[j]
-      end
-    end
-    false
-  end
-
-  def three_of_a_kind?
-    counts = Hash.new(0)
-    @sorted_values.each do |item|
-      counts[item] += 1
-      return true if counts[item] == 3
-    end
-    false
-  end
-
-  def four_of_a_kind?
-    counts = Hash.new(0)
-    @sorted_values.each do |item|
-      counts[item] += 1
-      return true if counts[item] == 4
-    end
-    false
-  end
 end
+cards = [
+        Card.new(10, "Hearts"),
+        Card.new(11, "Hearts"),
+        Card.new(12, "Hearts"),
+        Card.new(13, "Hearts"),
+        Card.new(1, "Hearts")
+      ]

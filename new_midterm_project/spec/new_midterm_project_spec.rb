@@ -44,26 +44,18 @@ RSpec.describe Deck do
 end
 
 RSpec.describe Hand do
-  let(:cards) do
-    [
-      Card.new(3, "Hearts"),
-      Card.new(2, "Clubs"),
-      Card.new(6, "Spades"),
-      Card.new(5, "Diamonds"),
-      Card.new(4, "Hearts")
-    ]
-  end
-  let(:hand) { Hand.new(cards) }
-  describe "#quality" do
-    it "orders the cards in ascending order based on value" do
-      expected_order = [2, 3, 4, 5, 6]
-      sorted_values = hand.quality
-      expect(sorted_values).to eq(expected_order)
-    end
-  end
   describe "#strength" do
-    it "checks to see if there is a straight" do
-      expect(hand.strength).to  eq(true)
+    it "evaluates a Straight correctly" do
+      cards = [
+        Card.new(10, "Hearts"),
+        Card.new(11, "Hearts"),
+        Card.new(12, "Hearts"),
+        Card.new(13, "Hearts"),
+        Card.new(1, "Hearts")
+      ]
+      hand = Hand.new(cards)
+      expect(hand.strength).to eq("Straight")
     end
+
   end
 end
