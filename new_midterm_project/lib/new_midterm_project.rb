@@ -180,27 +180,31 @@ class Hand
   def quality(hands)
     best_hand = []
     best_hand_strength = 1
-    hands.each do |hand|
-      if @hierarchy[hand.strength] > best_hand_strength
-        best_hand << hand
-        best_hand_strength = @hierarchy[hand.strength]
-      end
-    end
-    hands.each do |hand|
-      if @hierarchy[hand.strength] == best_hand_strength
-        best_hand << hand
-      end
-    end
-    return best_hand[0] if best_hand.uniq.length == 1
 
-    #tied at game type kinds/pairs
+    # Find the highest-strength hands
+    hands.each do |hand|
+      strength = @hierarchy[hand.strength]
+      if strength > best_hand_strength
+        best_hand = [hand]
+        best_hand_strength = strength
+      elsif strength == best_hand_strength
+        best_hand << hand
+      end
+    end
+
+    # If there's only one highest-strength hand, return it
+    return best_hand[0] if best_hand.length == 1
+
+    # If there are tied hands, handle the tie
+    return tied_kinds_or_pairs(best_hand) if (best_hand_strength == 2 || best_hand_strength == 3 || best_hand_strength == 4 || best_hand_strength == 8)
+  end
+  def tied_kinds_or_pairs(hands)
     best_tied_hand = nil
     best_tied_value = 0
 
-    best_hand.each do |hand|
+    hands.each do |hand|
       max_value = hand.current_values.max
       return hand if hand.current_values.count(1) > 1
-
 
       if max_value > best_tied_value
         best_tied_hand = hand
@@ -208,6 +212,6 @@ class Hand
       end
     end
 
-  best_tied_hand
+    best_tied_hand
   end
 end
