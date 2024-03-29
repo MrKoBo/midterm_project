@@ -156,4 +156,45 @@ RSpec.describe Hand do
       expect(hand.strength).to eq("High Card")
     end
   end
+  describe "#quality" do
+    it "determines an outright winner" do
+      cards1 = [
+        Card.new(2, "Hearts"),
+        Card.new(9, "Diamonds"),
+        Card.new(6, "Hearts"),
+        Card.new(10, "Clubs"),
+        Card.new(4, "Spades")
+      ]
+      hand1 = Hand.new(cards1)
+      cards2 = [
+        Card.new(10, "Hearts"),
+        Card.new(11, "Hearts"),
+        Card.new(12, "Hearts"),
+        Card.new(13, "Hearts"),
+        Card.new(1, "Hearts")
+      ]
+      hand2 = Hand.new(cards2)
+      expect([hand1,hand2].quality).to eq(hand1)
+
+    end
+    it "determines winner when tied" do
+      cards1 = [
+        Card.new(2, "Hearts"),
+        Card.new(2, "Diamonds"),
+        Card.new(6, "Hearts"),
+        Card.new(2, "Clubs"),
+        Card.new(2, "Spades")
+      ]
+      hand1 = Hand.new(cards1)
+      cards2 = [
+        Card.new(10, "Hearts"),
+        Card.new(2, "Diamonds"),
+        Card.new(10, "Hearts"),
+        Card.new(10, "Clubs"),
+        Card.new(10, "Spades")
+      ]
+      hand2 = Hand.new(cards2)
+      expect([hand1,hand2].quality).to eq(hand1)
+    end
+  end
 end

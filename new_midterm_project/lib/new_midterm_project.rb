@@ -177,6 +177,6 @@ class Hand
     end
     false
   end
-
-
+  def quality
+  end
 end
