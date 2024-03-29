@@ -54,7 +54,7 @@ class Deck
 end
 
 class Hand
-  attr_accessor :active_hand
+  attr_accessor :active_hand, :current_values
 
   def initialize(active_hand)
     @active_hand = active_hand
@@ -177,6 +177,37 @@ class Hand
     end
     false
   end
-  def quality
+  def quality(hands)
+    best_hand = []
+    best_hand_strength = 1
+    hands.each do |hand|
+      if @hierarchy[hand.strength] > best_hand_strength
+        best_hand << hand
+        best_hand_strength = @hierarchy[hand.strength]
+      end
+    end
+    hands.each do |hand|
+      if @hierarchy[hand.strength] == best_hand_strength
+        best_hand << hand
+      end
+    end
+    return best_hand[0] if best_hand.uniq.length == 1
+
+    #tied at game type kinds/pairs
+    best_tied_hand = nil
+    best_tied_value = 0
+
+    best_hand.each do |hand|
+      max_value = hand.current_values.max
+      return hand if hand.current_values.count(1) > 1
+
+
+      if max_value > best_tied_value
+        best_tied_hand = hand
+        best_tied_value = max_value
+      end
+    end
+
+  best_tied_hand
   end
 end

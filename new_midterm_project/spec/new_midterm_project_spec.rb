@@ -174,27 +174,35 @@ RSpec.describe Hand do
         Card.new(1, "Hearts")
       ]
       hand2 = Hand.new(cards2)
-      expect([hand1,hand2].quality).to eq(hand1)
-
+      expect(hand1.quality([hand1, hand2])).to eq(hand2)
     end
-    it "determines winner when tied" do
+
+    it "determines winner when tied in game type kinds" do
       cards1 = [
         Card.new(2, "Hearts"),
-        Card.new(2, "Diamonds"),
+        Card.new(4, "Diamonds"),
         Card.new(6, "Hearts"),
-        Card.new(2, "Clubs"),
+        Card.new(1, "Clubs"),
         Card.new(2, "Spades")
       ]
       hand1 = Hand.new(cards1)
       cards2 = [
-        Card.new(10, "Hearts"),
+        Card.new(5, "Hearts"),
         Card.new(2, "Diamonds"),
         Card.new(10, "Hearts"),
-        Card.new(10, "Clubs"),
+        Card.new(6, "Clubs"),
         Card.new(10, "Spades")
       ]
       hand2 = Hand.new(cards2)
-      expect([hand1,hand2].quality).to eq(hand1)
+      cards3 = [
+        Card.new(1, "Hearts"),
+        Card.new(2, "Diamonds"),
+        Card.new(3, "Hearts"),
+        Card.new(10, "Clubs"),
+        Card.new(1, "Spades")
+      ]
+      hand3 = Hand.new(cards3)
+      expect(hand1.quality([hand1, hand2, hand3])).to eq(hand3)
     end
   end
 end
