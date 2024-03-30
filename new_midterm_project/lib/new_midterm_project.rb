@@ -280,4 +280,12 @@ class Hand
   end
 end
 class Player
+  attr_accessor :my_hand, :my_pot
+  def initialize(my_hand, my_pot)
+    @my_hand = my_hand
+    @my_pot = my_pot
+  end
+  def discard(cards)
+    return "red"
+  end
 end

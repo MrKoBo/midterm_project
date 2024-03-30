@@ -343,7 +343,7 @@ RSpec.describe Hand do
 end
 RSpec.describe Player do
   describe "#Discard" do
-    xit "allows users to keep cards" do
+    it "allows users to keep cards" do
       cards = [
         Card.new(11, "Clubs"),
         Card.new(12, "Hearts"),
@@ -353,10 +353,10 @@ RSpec.describe Player do
       ]
       hand = Hand.new(cards)
       player = Player.new(hand, 50)
-      player.discard([])
-      expect(player.my_hand).to eq(hands)
+      new_hand = player.discard([])
+      expect(new_hand).to eq(hand)
     end
-    xit "allows users to discard valid amount of cards" do
+    it "allows users to discard valid amount of cards" do
       cards = [
         Card.new(11, "Clubs"),
         Card.new(12, "Hearts"),
@@ -366,10 +366,10 @@ RSpec.describe Player do
       ]
       hand = Hand.new(cards)
       player = Player.new(hand, 50)
-      player.discard([1, 3, 5])
-      expect(player.my_hand).to eq([cards[1], cards[3]])
+      new_hand = player.discard([1, 3, 5])
+      expect(new_hand).to eq([cards[1], cards[3]])
     end
-    xit "block users from discarding too many" do
+    it "block users from discarding too many" do
       cards = [
         Card.new(11, "Clubs"),
         Card.new(12, "Hearts"),
@@ -379,10 +379,9 @@ RSpec.describe Player do
       ]
       hand = Hand.new(cards)
       player = Player.new(hand, 50)
-      player.discard([0, 1, 3, 5])
-      expect("Error too many cards try again: ")
+      expect(player.discard([0, 1, 3, 5])).to eq("Error too many cards try again: ")
     end
-    xit "block users from discarding cards that dont exist (Outside of index range 0-4)" do
+    it "block users from discarding cards that dont exist (Outside of index range 0-4)" do
       cards = [
         Card.new(11, "Clubs"),
         Card.new(12, "Hearts"),
@@ -392,8 +391,7 @@ RSpec.describe Player do
       ]
       hand = Hand.new(cards)
       player = Player.new(hand, 50)
-      player.discard([1, 3, 5, 6])
-      expect("Error one of those cards do not exist try again: ")
+      expect(player.discard([1, 3, 5, 6])).to eq("Error one of those cards do not exist try again: ")
     end
   end
 end
