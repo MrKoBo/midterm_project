@@ -288,7 +288,8 @@ class Player
   def discard
     #each index allow me to use the index of each my_hand and not the actual card
     @my_hand.active_hand.each_index do |i|
-      puts "Card #{i + 1}: #{@my_hand.active_hand[i].display}"
+      puts "Card #{i + 1}:"
+      @my_hand.active_hand[i].display
     end
     puts "You currently have a #{@my_hand.strength}"
     puts "Which cards would you like to discard? If none type 0: "
@@ -314,6 +315,11 @@ class Player
     @my_hand
   end
   def bet
+    @my_hand.active_hand.each_index do |i|
+      puts "Card #{i + 1}:"
+      @my_hand.active_hand[i].display
+    end
+    puts "You currently have a #{@my_hand.strength}"
     puts "You currently have #{@my_pot} chips.\nWhich betting would you like to make (Fold, Raise, See): "
     input = gets.chomp
   end
@@ -322,7 +328,7 @@ end
 class Game
   attr_accessor :pot, :deck, :players, :current_player_turn, :bet
 
-  def initialize(num_of_players = 2, player_pot = 100, deck = Deck.new)
+  def initialize(num_of_players = 2, player_pot = 100, bet = 15, deck = Deck.new)
     @num_of_players = num_of_players
     @player_pot = player_pot
     @players = {}
@@ -343,7 +349,7 @@ class Game
     #start the game with player1
     @current_player_turn = "player1"
     #in order to start betting you have to put in at least 15
-    @bet = 15
+    @bet = bet
     @pot = 0
   end
 
@@ -355,11 +361,12 @@ class Game
   end
   def ask_bet
     @players.each do |key, value|
-      puts "Hello #{key}"
+      puts "Hello #{key} the current bet is #{@bet}"
       bet_result = value.bet
       fold(key) if bet_result == "Fold"
       see(value) if bet_result == "See"
       raise_bet(key, value) if bet_result == "Raise"
+      system("clear")
     end
   end
   def fold(player_name)
@@ -384,4 +391,46 @@ class Game
       fold(player_name)
     end
   end
+  def start_discard
+    @players.each do |key, value|
+      puts "Hello #{key} This is the Discard Phase"
+      value.discard
+      fill_hand(value) if value.my_hand.active_hand.length < 5
+      puts "press enter to continue"
+      input = gets.chomp
+      system("clear")
+    end
+  end
+  def fill_hand(player_object)
+    while player_object.my_hand.active_hand.length < 5
+      new_card = @deck.deal
+      new_list = player_object.my_hand.active_hand
+      new_list << new_card
+      new_hand = Hand.new(new_list)
+      player_object.my_hand = new_hand
+    end
+    puts "Your new hand is now a #{player_object.my_hand.strength}"
+    player_object.my_hand.active_hand.each_index do |i|
+      puts "Card #{i + 1}:"
+      player_object.my_hand.active_hand[i].display
+    end
+
+  end
+
+end
+my_game = Game.new(2, 200, 25)
+my_game.ask_bet
+my_game.start_discard
+my_game.ask_bet
+if my_game.players.length >= 2
+  final_hands = []
+  my_game.players.each do |key, value|
+    final_hands << value.my_hand.active_hand
+  end
+  my_game.players.each do |key, value|
+    puts final_hands.inspect
+    return value.quality([final_hands])
+  end
+else
+  puts "Congrats Last player standing won the entire pot"
 end
