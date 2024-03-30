@@ -285,7 +285,33 @@ class Player
     @my_hand = my_hand
     @my_pot = my_pot
   end
-  def discard(cards)
-    return "red"
+  def discard()
+    #each index allow me to use the index of each my_hand and not the actual card
+    @my_hand.active_hand.each_index do |i|
+      puts "Card #{i + 1}: #{@my_hand.active_hand[i].display}"
+    end
+    puts "You currently have a #{@my_hand.strength}"
+    puts "Which cards would you like to discard? If none type 0: "
+
+    begin
+      input = gets.chomp
+      string_index = input.split(" ")
+      deletable_indicies = string_index.map {|num| num.to_i - 1}
+      raise ArgumentError, "Error: too many cards. (make sure you put a single space between them), Ex: 1 2 4,\nTry Again:" if deletable_indicies.length > 3
+      raise ArgumentError, "Error: one of those cards does not exist. (Range is 1-5) \nTry again: " if (deletable_indicies.max > 4 || deletable_indicies.min < -1)
+    rescue ArgumentError => e
+      puts "#{e.message}"
+      retry
+    end
+    return @my_hand if deletable_indicies[0] == -1
+    kept_cards = []
+    #each_with_index almost simulates a hash where i get element, index for each item
+    @my_hand.active_hand.each_with_index do |card, index|
+      #if index of my current card is not a deletable one, keep it
+      kept_cards << card if !deletable_indicies.include?(index)
+    end
+    @my_hand.active_hand = kept_cards
+    @my_hand
   end
+
 end

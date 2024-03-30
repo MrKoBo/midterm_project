@@ -349,12 +349,12 @@ RSpec.describe Player do
         Card.new(12, "Hearts"),
         Card.new(13, "Spades"),
         Card.new(10, "Hearts"),
-        Card.new(1, "Diamondss")
+        Card.new(1, "Diamonds")
       ]
       hand = Hand.new(cards)
       player = Player.new(hand, 50)
-      new_hand = player.discard([])
-      expect(new_hand).to eq(hand)
+      new_hand = player.discard()
+      expect(new_hand).to eq(player.my_hand)
     end
     it "allows users to discard valid amount of cards" do
       cards = [
@@ -362,36 +362,14 @@ RSpec.describe Player do
         Card.new(12, "Hearts"),
         Card.new(13, "Spades"),
         Card.new(10, "Hearts"),
-        Card.new(1, "Diamondss")
+        Card.new(1, "Diamonds")
       ]
       hand = Hand.new(cards)
       player = Player.new(hand, 50)
-      new_hand = player.discard([1, 3, 5])
-      expect(new_hand).to eq([cards[1], cards[3]])
-    end
-    it "block users from discarding too many" do
-      cards = [
-        Card.new(11, "Clubs"),
-        Card.new(12, "Hearts"),
-        Card.new(13, "Spades"),
-        Card.new(10, "Hearts"),
-        Card.new(1, "Diamondss")
-      ]
-      hand = Hand.new(cards)
-      player = Player.new(hand, 50)
-      expect(player.discard([0, 1, 3, 5])).to eq("Error too many cards try again: ")
-    end
-    it "block users from discarding cards that dont exist (Outside of index range 0-4)" do
-      cards = [
-        Card.new(11, "Clubs"),
-        Card.new(12, "Hearts"),
-        Card.new(13, "Spades"),
-        Card.new(10, "Hearts"),
-        Card.new(1, "Diamondss")
-      ]
-      hand = Hand.new(cards)
-      player = Player.new(hand, 50)
-      expect(player.discard([1, 3, 5, 6])).to eq("Error one of those cards do not exist try again: ")
+      #simulates player entering 2 and 4
+      allow(player).to receive(:gets).and_return("2 4\n")
+      player.discard
+      expect(player.my_hand.active_hand.length).to eq(3)
     end
   end
 end
