@@ -279,3 +279,5 @@ class Hand
     end
   end
 end
+class Player
+end
