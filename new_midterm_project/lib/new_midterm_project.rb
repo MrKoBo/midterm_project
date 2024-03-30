@@ -285,7 +285,7 @@ class Player
     @my_hand = my_hand
     @my_pot = my_pot
   end
-  def discard()
+  def discard
     #each index allow me to use the index of each my_hand and not the actual card
     @my_hand.active_hand.each_index do |i|
       puts "Card #{i + 1}: #{@my_hand.active_hand[i].display}"
@@ -312,6 +312,10 @@ class Player
     end
     @my_hand.active_hand = kept_cards
     @my_hand
+  end
+  def bet
+    puts "Which betting would you like to make (Fold, Raise, See): "
+    input = gets.chomp
   end
 
 end

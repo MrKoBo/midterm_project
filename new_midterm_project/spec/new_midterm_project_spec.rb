@@ -372,4 +372,34 @@ RSpec.describe Player do
       expect(player.my_hand.active_hand.length).to eq(3)
     end
   end
+  describe "#Bet" do
+    cards = [
+      Card.new(11, "Clubs"),
+      Card.new(12, "Hearts"),
+      Card.new(13, "Spades"),
+      Card.new(10, "Hearts"),
+      Card.new(1, "Diamonds")
+    ]
+    hand = Hand.new(cards)
+    player = Player.new(hand, 50)
+
+    it "Tells the game I am going to Fold" do
+      allow(player).to receive(:gets).and_return("Fold\n")
+      bet = player.bet
+      expect(bet).to eq("Fold")
+    end
+
+    it "Tells the game I am going to Raise" do
+      allow(player).to receive(:gets).and_return("Raise\n")
+      bet = player.bet
+      expect(bet).to eq("Raise")
+    end
+
+    it "Tells the game I am going to See" do
+      allow(player).to receive(:gets).and_return("See\n")
+      bet = player.bet
+      expect(bet).to eq("See")
+    end
+  end
+
 end
