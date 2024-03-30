@@ -27,9 +27,9 @@ class Deck
     @suits = ["Diamonds", "Hearts", "Clubs", "Spades"]
     @values = [1,2,3,4,5,6,7,8,9,10,11,12,13]
     @start_deck = []
-    @values.each do |key, value|
-      @suits.each do |item|
-        card = Card.new(key, item)
+    @values.each do |value|
+      @suits.each do |suit|
+        card = Card.new(value, suit)
         @start_deck << card
       end
     end
@@ -43,13 +43,13 @@ class Deck
   def deal
     top_card = @active_deck.shift
   end
-  def give_cards
+  def get_cards
     new_hand = []
     5.times do |item|
       item = deal
       new_hand << item
     end
-    Hand.new(new_hand)
+    return Hand.new(new_hand)
   end
 end
 
@@ -320,7 +320,19 @@ class Player
 
 end
 class Game
-  attr_accessor :pot, deck:
-  def initialize(num_of_players = 2, player_pot = 100, deck = Deck.new().shuffle_deck)
+  attr_accessor :pot, :deck, :players
+  def initialize(num_of_players = 2, player_pot = 100, deck = Deck.new)
+    @num_of_players = num_of_players
+    @player_pot = player_pot
+    @players = {}
+    @deck = deck
+    @deck.shuffle_deck
+
+    (0...@num_of_players).each do |i|
+      player_name = "player#{i}"
+      new_hand = @deck.get_cards
+      @players[player_name] = Player.new(new_hand, @player_pot)
+
+    end
   end
 end
