@@ -332,7 +332,9 @@ class Game
       player_name = "player#{i}"
       new_hand = @deck.get_cards
       @players[player_name] = Player.new(new_hand, @player_pot)
+    @current_player_turn = "player1"
 
     end
   end
+
 end

@@ -426,5 +426,34 @@ RSpec.describe Game do
     it "Takes appropriate amount of cards away from deck" do
       expect(game.deck.active_deck.length).to eq(32)
     end
+  describe "#current_player_turn" do
+    it "returns the correct player's turn" do
+      game = Game.new(num_of_players: 4)
+      expect(game.current_player_turn).to eq("player1")
+    end
   end
+
+  describe "#next_turn" do
+    it "updates the current player's turn to the next player" do
+      game = Game.new(num_of_players: 4)
+      game.next_turn
+      expect(game.current_player_turn).to eq("player2")
+    end
+  end
+  describe "#bet" do
+  it "allows a player to place a bet and updates the pot" do
+    game = Game.new(num_of_players: 4)
+    initial_pot = game.pot
+    bet_amt = game.bet()
+    expect(game.pot).to eq(initial_pot + bet_amt)
+  end
+
+  it "updates the player's pot after placing a bet" do
+    game = Game.new(num_of_players: 4)
+    initial_pot = game.players["player1"].my_pot
+    bet_amt = game.bet
+    expect(game.players["player1"].my_pot).to eq(initial_pot - bet_amt)
+  end
+end
+
 end
