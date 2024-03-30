@@ -312,7 +312,7 @@ RSpec.describe Hand do
       hand3 = Hand.new(cards3)
       expect(hand1.quality([hand1, hand2, hand3])).to eq(hand2)
     end
-    xit "determines winner when tied in game type High Card" do
+    it "determines winner when tied in game type High Card" do
       cards1 = [
         Card.new(1, "Hearts"),
         Card.new(4, "Diamonds"),

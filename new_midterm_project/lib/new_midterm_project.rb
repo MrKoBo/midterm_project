@@ -200,6 +200,7 @@ class Hand
     return tied_straight(best_hand) if (best_hand_strength == 5 || best_hand_strength == 9)
     return tied_full_house(best_hand) if best_hand_strength == 7
     return tied_flush(best_hand) if best_hand_strength == 6
+    return tied_flush(best_hand)
   end
   def tied_kinds_or_pairs(hands)
     best_tied_hand = nil
@@ -277,5 +278,4 @@ class Hand
       return potential_match[0] if potential_match.length == 1
     end
   end
-
 end
