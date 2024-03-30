@@ -403,3 +403,25 @@ RSpec.describe Player do
   end
 
 end
+Rspec.describe Game do
+  describe "#Initalize" do
+    game = Game(num_of_players = 4)
+    it "Makes the correct amount of players" do
+      list_of_players = game.players
+      expect(list_of_players.length).to eq(4)
+    end
+    it "Gives all players 5 cards" do
+      player1 = game.players[0]
+      player2 = game.players[1]
+      player3 = game.players[2]
+      player4 = game.players[3]
+      expect(player1.my_hand.active_hand.length).to eq(5)
+      expect(player1.my_hand.active_hand.length).to eq(5)
+      expect(player1.my_hand.active_hand.length).to eq(5)
+      expect(player1.my_hand.active_hand.length).to eq(5)
+    end
+    it "Takes appropriate amount of cards away from deck" do
+      expect(game.deck.active_deck.length).to eq(32)
+    end
+  end
+end

@@ -314,8 +314,13 @@ class Player
     @my_hand
   end
   def bet
-    puts "Which betting would you like to make (Fold, Raise, See): "
+    puts "You currently have #{@my_pot} chips.\nWhich betting would you like to make (Fold, Raise, See): "
     input = gets.chomp
   end
 
+end
+class Game
+  attr_accessor :pot, deck:
+  def initialize(num_of_players = 2, player_pot = 100, deck = Deck.new().shuffle_deck)
+  end
 end
