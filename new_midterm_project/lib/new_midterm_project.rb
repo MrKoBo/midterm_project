@@ -197,6 +197,9 @@ class Hand
 
     # If there are tied hands, handle the tie
     return tied_kinds_or_pairs(best_hand) if (best_hand_strength == 2 || best_hand_strength == 3 || best_hand_strength == 4 || best_hand_strength == 8)
+    return tied_straight(best_hand) if (best_hand_strength == 5 || best_hand_strength == 9)
+    return tied_full_house(best_hand) if best_hand_strength == 7
+    return tied_flush(best_hand) if best_hand_strength == 6
   end
   def tied_kinds_or_pairs(hands)
     best_tied_hand = nil
@@ -214,4 +217,65 @@ class Hand
 
     best_tied_hand
   end
+  def tied_straight(hands)
+    best_tied_hand = nil
+    best_tied_value = 0
+    hands.each do |hand|
+      if hand.current_values.count(1) == 1
+        return hand if hand.current_values.sort[1] == 10
+      end
+      max_value = hand.current_values.max
+      if max_value > best_tied_value
+        best_tied_hand = hand
+        best_tied_value = max_value
+      end
+    end
+  end
+  def tied_full_house(hands)
+    best_tied_trio = 0
+
+    hands.each do |hand|
+      return hand if hand.current_values.count(1) == 3
+      max_value = hand.current_values.max
+      counts = Hash.new(0)
+      hand.current_values.each do |item|
+        counts[item] += 1
+      end
+      counts.each do |key, value|
+        if counts[key] == 3
+          best_tied_trio = key if key > best_tied_trio
+        end
+      end
+    end
+    best_tied_trio
+  end
+  def tied_flush(hands)
+    best_tied_hands = []
+    hands.each do |hand|
+      best_tied_hands << hand if hand.current_values.min == 1
+    end
+    return best_tied_hands[0] if best_tied_hands.length == 1
+    return find_best_value(hands) if best_tied_hands == []
+    if best_tied_hands[0].current_values.min == 1
+      highest_tiebreaker = find_best_value(best_tied_hands)
+      return highest_tiebreaker
+    end
+
+
+  end
+  def find_best_value(hands)
+    potential_match = hands
+    4.downto(0) do |i|
+      max_value = nil
+      potential_match.each do |hand|
+        if max_value.nil? || hand.current_values.sort[i] > max_value
+          max_value = hand.current_values.sort[i]
+        end
+      end
+      #modify potential list
+      potential_match.select! { |hand| hand.current_values.sort[i] == max_value }
+      return potential_match[0] if potential_match.length == 1
+    end
+  end
+
 end
