@@ -320,21 +320,68 @@ class Player
 
 end
 class Game
-  attr_accessor :pot, :deck, :players
+  attr_accessor :pot, :deck, :players, :current_player_turn, :bet
+
   def initialize(num_of_players = 2, player_pot = 100, deck = Deck.new)
     @num_of_players = num_of_players
     @player_pot = player_pot
     @players = {}
     @deck = deck
     @deck.shuffle_deck
-
+    #make the player with 5 cards
     (0...@num_of_players).each do |i|
-      player_name = "player#{i}"
+      player_name = "player#{i + 1}"
       new_hand = @deck.get_cards
       @players[player_name] = Player.new(new_hand, @player_pot)
-    @current_player_turn = "player1"
-
     end
+    #make a dictonary to help keep up with turns
+    @num_rep_of_player = {}
+    @players.each do |key, _|
+      player_number = key.slice(6..-1).to_i
+      @num_rep_of_player[key] = player_number
+    end
+    #start the game with player1
+    @current_player_turn = "player1"
+    #in order to start betting you have to put in at least 15
+    @bet = 15
+    @pot = 0
   end
 
+  def next_turn
+    current_player_number = @num_rep_of_player[@current_player_turn]
+    next_player_number = (current_player_number % @num_of_players) + 1
+    @current_player_turn = "player#{next_player_number}"
+    @current_player_turn = "player1" if next_player_number > @num_of_players
+  end
+  def ask_bet
+    @players.each do |key, value|
+      puts "Hello #{key}"
+      bet_result = value.bet
+      fold(key) if bet_result == "Fold"
+      see(value) if bet_result == "See"
+      raise_bet(key, value) if bet_result == "Raise"
+    end
+  end
+  def fold(player_name)
+    @players.delete(player_name)
+    @players
+  end
+  def see(player_object)
+    if player_object.my_pot > @bet
+      player_object.my_pot -= @bet
+      @pot += @bet
+    end
+  end
+  def raise_bet(player_name, player_object)
+    puts "What would you like to the bet to? (Plug in bet amount higher than #{@bet})"
+    input = gets.chomp
+    @bet = input.to_i
+    if player_object.my_pot > @bet
+      player_object.my_pot -= @bet
+      @pot += @bet
+    else
+      puts "You tried to steal so now you fold"
+      fold(player_name)
+    end
+  end
 end

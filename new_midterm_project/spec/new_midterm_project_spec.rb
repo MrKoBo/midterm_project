@@ -426,34 +426,40 @@ RSpec.describe Game do
     it "Takes appropriate amount of cards away from deck" do
       expect(game.deck.active_deck.length).to eq(32)
     end
+  end
   describe "#current_player_turn" do
     it "returns the correct player's turn" do
-      game = Game.new(num_of_players: 4)
+      game = Game.new()
       expect(game.current_player_turn).to eq("player1")
     end
   end
 
   describe "#next_turn" do
     it "updates the current player's turn to the next player" do
-      game = Game.new(num_of_players: 4)
+      game = Game.new()
       game.next_turn
       expect(game.current_player_turn).to eq("player2")
     end
   end
-  describe "#bet" do
-  it "allows a player to place a bet and updates the pot" do
-    game = Game.new(num_of_players: 4)
-    initial_pot = game.pot
-    bet_amt = game.bet()
-    expect(game.pot).to eq(initial_pot + bet_amt)
-  end
+  describe "#ask_bet" do
+    it "allows a player to place a bet and updates the pot" do
+      game = Game.new(num_of_players = 4)
+      initial_pot = game.pot
+      game.raise_bet("player1", game.players["player1"])
+      expect(game.pot).to be > initial_pot
+    end
 
-  it "updates the player's pot after placing a bet" do
-    game = Game.new(num_of_players: 4)
-    initial_pot = game.players["player1"].my_pot
-    bet_amt = game.bet
-    expect(game.players["player1"].my_pot).to eq(initial_pot - bet_amt)
+    it "updates the player's pot after placing a bet" do
+      game = Game.new(num_of_players = 4)
+      initial_pot = game.players["player1"].my_pot
+      game.raise_bet("player1", game.players["player1"])
+      expect(game.players["player1"].my_pot).to be < initial_pot
+    end
+    it "removes player from game if fold" do
+      game = Game.new(num_of_players = 4)
+      player_to_fold = "player1"
+      game.fold(player_to_fold)
+      expect(game.players.length).to eq(3)
+    end
   end
-end
-
 end
